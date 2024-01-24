@@ -83,3 +83,18 @@ function get_books_by_author($con, $id){
 
    return $books;
 }
+
+# Get book details by ID function
+function get_book_details_by_id($con, $id){
+   $sql  = "SELECT id, title, author_id, category_id FROM books WHERE id=?";
+   $stmt = $con->prepare($sql);
+   $stmt->execute([$id]);
+
+   if ($stmt->rowCount() > 0) {
+   	  $book_details = $stmt->fetch();
+   } else {
+      $book_details = 0;
+   }
+
+   return $book_details;
+}

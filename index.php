@@ -139,10 +139,20 @@ $categories = get_all_categories($conn);
 						</p>
                        <a href="uploads/files/<?=$book['file']?>"
                           class="btn btn-success">Open</a>
-
+						  <!-- comment both <a> tags -->
                         <a href="uploads/files/<?=$book['file']?>"
                           class="btn btn-primary"
                           download="<?=$book['title']?>">Download</a>
+
+						<!-- Buy button form -->
+						<form action="payment.php" method="post">
+							<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
+							<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
+							<!-- <input type="hidden" name="book_price" value="<?= $book['price'] ?>"> -->
+							<!-- <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>"> -->
+							<button type="submit" class="btn btn-secondary">Buy</button>
+						</form>
+
 					</div>
 				</div>
 				<?php } ?>
