@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) &&
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="img//book-open-reader-solid (1).svg" />
-	<title>LOGIN</title>
+	<title>BookHauler - LOGIN</title>
 
     <!-- bootstrap 5 CDN-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
@@ -58,7 +58,6 @@ if (!isset($_SESSION['user_id']) &&
 		          Login</button>
 			<!-- SignUp link -->
 		   <a href="signUp.php" style="margin-left: 4.5rem;">Don't have account? Register here</a>
-		   <a href="index.php">Store</a>
 		</form>
 	</div>
 </body>

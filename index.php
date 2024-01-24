@@ -1,6 +1,8 @@
 <?php 
 session_start();
-
+if (!isset($_SESSION['user_id'])){
+	header("Location: login.php");
+}
 # Database Connection File
 include "db_conn.php";
 
@@ -23,7 +25,7 @@ $categories = get_all_categories($conn);
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="img//book-open-reader-solid (1).svg" />
-	<title>Be BookHauler</title>
+	<title>BookHauler</title>
 
     <!-- bootstrap 5 CDN-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
@@ -36,47 +38,7 @@ $categories = get_all_categories($conn);
 </head>
 <body>
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		  <div class="container-fluid">
-			<img src="img/book-open-reader-solid (1).svg" alt="Logo" style="height: 1.3rem; width:auto; margin-right: 0.7rem;">
-		    <a class="navbar-brand" href="index.php">Be BookHauler</a>
-		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		      <span class="navbar-toggler-icon"></span>
-		    </button>
-		    <div class="collapse navbar-collapse" 
-		         id="navbarSupportedContent">
-		      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-		        <li class="nav-item">
-		          <a class="nav-link active" 
-		             aria-current="page" 
-		             href="index.php">Store</a>
-		        </li>
-				<li class="nav-item">
-		          <a class="nav-link" 
-		             href="my-books.php">My Books</a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link" 
-		             href="#">Contact</a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link" 
-		             href="#">About</a>
-		        </li>
-		        <li class="nav-item">
-		          <?php if (isset($_SESSION['user_id'])) {?>
-		          	<a class="nav-link" 
-		             href="admin.php">Admin</a>
-		          <?php }else{ ?>
-		          <a class="nav-link" 
-		             href="logout.php">Logout</a>
-		          <?php } ?>
-
-		        </li>
-		      </ul>
-		    </div>
-		  </div>
-		</nav>
+		<?php include "header.html"; ?>
 		<form action="search.php"
              method="get" 
              style="width: 100%; max-width: 30rem">
