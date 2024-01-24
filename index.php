@@ -133,8 +133,13 @@ $categories = get_all_categories($conn);
 										break;
 									}
 								?>
-
 								<?php } ?>
+								<br></b></i>
+							<!-- Book price -->
+							<i><b>Price:
+								<?php
+									echo $book['price'];
+								?>₹
 							<br></b></i>
 						</p>
                        <a href="uploads/files/<?=$book['file']?>"
@@ -148,8 +153,8 @@ $categories = get_all_categories($conn);
 						<form action="payment.php" method="post">
 							<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
 							<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
-							<!-- <input type="hidden" name="book_price" value="<?= $book['price'] ?>"> -->
-							<!-- <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>"> -->
+							<input type="hidden" name="book_price" value="<?= $book['price'] ?>">
+							<input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
 							<button type="submit" class="btn btn-secondary">Buy</button>
 						</form>
 

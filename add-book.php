@@ -24,6 +24,10 @@ if (isset($_SESSION['user_id']) &&
     	$desc = $_GET['desc'];
     }else $desc = '';
 
+	if (isset($_GET['price'])) {
+    	$price = $_GET['price'];
+    }else $price = 0;
+
     if (isset($_GET['category_id'])) {
     	$category_id = $_GET['category_id'];
     }else $category_id = 0;
@@ -121,6 +125,16 @@ if (isset($_SESSION['user_id']) &&
 		           class="form-control" 
 		           value="<?=$desc?>"
 		           name="book_description">
+		</div>
+
+		<div class="mb-3">
+		    <label class="form-label">
+		           Book Price
+		           </label>
+		    <input type="number" 
+		           class="form-control"
+		           value="<?=$price?>" 
+		           name="book_price">
 		</div>
 
 		<div class="mb-3">

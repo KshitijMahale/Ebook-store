@@ -18,12 +18,14 @@ $categories = get_all_categories($conn);
 
 # Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $orderid = $_POST['orderid'];
+    $price = $_POST['price'];
     $book_id = $_POST['book_id'];
 	$user_id = $_POST['user_id'];
     $book_title = $_POST['book_title'];
-    $abprice = $_POST['book_price'];
-	$orderid = 'OID'.rand(10000,100000).'ID'.$book_id;
-
+    $date= date('m/d/Y - h:i:sa',time());
+    $paymethod = "ONLINE";
+    $paystatus = "Paid";
 
     # Fetch additional book details
     $book_details = get_book_details_by_id($conn, $book_id);
@@ -86,73 +88,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		    </div>
 		  </div>
 		</nav>
-        <h2 class="mt-3">Payment Details</h2>
+        <h2 class="mt-3">Summary</h2>
         <ul>
+            <li><strong>Order ID:</strong> <?= $orderid ?></li>
+            <li><strong>Book Price:</strong> <?= $price ?></li>
             <li><strong>Book ID:</strong> <?= $book_id ?></li>
             <li><strong>Book Title:</strong> <?= $book_title ?></li>
-            <li><strong>Book Price:</strong> <?= $abprice ?>₹</li>
+            <li><strong>Date:</strong> <?= $date ?></li>
+            <li><strong>Payment Method:</strong> <?= $paymethod ?></li>
+            <li><strong>Payment Status:</strong> <?= $paystatus ?></li>    
         </ul>
 	</div>
-
-
-
-<div id="con" style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 75vh;
-">
-	<div>
-			<?php
-
-				$apikey = "rzp_test_KiVX6zgSEbyzCT";
-
-			?>
-			<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-
-			<form action="summary.php" method="post">
-
-				<script 
-					src="https://checkout.razorpay.com/v1/checkout.js"
-					data-key="<?php echo $apikey; ?>"
-					data-amount="<?php echo ($abprice*100); ?>"
-					data-currency="INR"
-					data-id="<?php echo $orderid;?>"
-					data-buttontext="Payment"
-					data-name="BookHauler"
-					data-description="A Order Page of BookHauler"
-					data-image="https://i.ibb.co/zNc72B6/book.png"
-					data-prefill.name=""
-					data-prefill.email=""
-					data-theme.color="#181616"
-				></script>
-
-
-				<input type="hidden" name="orderid" value="<?php echo $orderid;?>">
-				<input type="hidden" name="price" value="<?php echo $abprice;?>">
-				<input type="hidden" name="book_id" value="<?php echo $book_id;?>">
-				<input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-				<input type="hidden" name="book_title" value="<?php echo $book_title;?>">
-
-				<input type="hidden" custom="Hidden Element" name="hidden">
-			</form>
-		
-	</div>
-</div>
 </body>
 </html>
-<script>
-    window.onload = function() {
-        var contentDiv = document.getElementById("con");
-        if (contentDiv) {
-            var inputElement = contentDiv.querySelector("input");
-            if (inputElement) {
-                inputElement.click();
-            }
-        }
-    };
-</script>
-
 <?php
 } else {
     # Redirect to index.php if form is not submitted

@@ -50,7 +50,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
                 // User found, check password
                 if ($password === $user['password']) { // Modify this line
                     # Successful user login
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['user_email'] = $user['email'];
                     header("Location: ../index.php");
                     exit();

@@ -22,6 +22,7 @@ if (isset($_SESSION['user_id']) &&
 	if (isset($_POST['book_id'])          &&
         isset($_POST['book_title'])       &&
         isset($_POST['book_description']) &&
+        isset($_POST['book_price'])       &&
         isset($_POST['book_author'])      &&
         isset($_POST['book_category'])    &&
         isset($_FILES['book_cover'])      &&
@@ -36,6 +37,7 @@ if (isset($_SESSION['user_id']) &&
 		$id          = $_POST['book_id'];
 		$title       = $_POST['book_title'];
 		$description = $_POST['book_description'];
+		$price       = $_POST['book_price'];
 		$author      = $_POST['book_author'];
 		$category    = $_POST['book_category'];
         
@@ -57,6 +59,11 @@ if (isset($_SESSION['user_id']) &&
         $location = "../edit-book.php";
         $ms = "id=$id&error";
 		is_empty($description, $text, $location, $ms, "");
+
+		$text = "Book price";
+        $location = "../add-book.php";
+        $ms = "error";
+		is_empty($price, $text, $location, $ms, $user_input);
 
 		$text = "Book author";
         $location = "../edit-book.php";
@@ -130,10 +137,11 @@ if (isset($_SESSION['user_id']) &&
 		          	            description=?,
 		          	            category_id=?,
 		          	            cover=?,
-		          	            file=?
+		          	            file=?,
+								price=?
 		          	        WHERE id=?";
 		          	$stmt = $conn->prepare($sql);
-					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $file_URL, $id]);
+					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $file_URL, $price, $id]);
 
 				    /**
 				      If there is no error while 
@@ -194,10 +202,11 @@ if (isset($_SESSION['user_id']) &&
 		          	            author_id=?,
 		          	            description=?,
 		          	            category_id=?,
-		          	            cover=?
+		          	            cover=?,
+								price=?
 		          	        WHERE id=?";
 		          	$stmt = $conn->prepare($sql);
-					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $id]);
+					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $price, $id]);
 
 				    /**
 				      If there is no error while 
@@ -265,10 +274,11 @@ if (isset($_SESSION['user_id']) &&
 	          	            author_id=?,
 	          	            description=?,
 	          	            category_id=?,
-	          	            file=?
+	          	            file=?,
+							price=?
 	          	        WHERE id=?";
 	          	$stmt = $conn->prepare($sql);
-				$res  = $stmt->execute([$title, $author, $description, $category, $file_URL, $id]);
+				$res  = $stmt->execute([$title, $author, $description, $category, $file_URL, $price, $id]);
 
 			    /**
 			      If there is no error while 
@@ -295,10 +305,11 @@ if (isset($_SESSION['user_id']) &&
           	        SET title=?,
           	            author_id=?,
           	            description=?,
-          	            category_id=?
+          	            category_id=?,
+						price=?
           	        WHERE id=?";
           	$stmt = $conn->prepare($sql);
-			$res  = $stmt->execute([$title, $author, $description, $category, $id]);
+			$res  = $stmt->execute([$title, $author, $description, $category, $price, $id]);
 
 		    /**
 		      If there is no error while 
