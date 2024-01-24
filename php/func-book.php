@@ -98,3 +98,44 @@ function get_book_details_by_id($con, $id){
 
    return $book_details;
 }
+
+# Get book details if purchased (use to display purchased books on my books page)
+function get_user_purchased_books($conn, $user_id) {
+   try {
+       $stmt = $conn->prepare("SELECT books.* 
+                               FROM orders
+                               JOIN books ON orders.book_id = books.id
+                               WHERE orders.user_id = :user_id
+                               AND orders.payment_status = 'Paid'");
+       $stmt->bindParam(':user_id', $user_id);
+       $stmt->execute();
+       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+       return $result;
+   } catch (PDOException $e) {
+       # Handle database error
+       $em = "Database error: " . $e->getMessage();
+       header("Location: index.php?error=$em");
+       exit();
+   }
+}
+
+# Get book details if purchased  (use to display buy & open, download buttons)
+function has_user_purchased_book($conn, $user_id, $book_id) {
+   try {
+       $stmt = $conn->prepare("SELECT 1 
+                              FROM orders
+                              WHERE user_id = :user_id
+                              AND book_id = :book_id
+                              AND payment_status = 'Paid'");
+       $stmt->bindParam(':user_id', $user_id);
+       $stmt->bindParam(':book_id', $book_id);
+       $stmt->execute();
+       $result = $stmt->fetch(PDO::FETCH_COLUMN);
+       return $result !== false; // If the record exists, return true
+   } catch (PDOException $e) {
+       # Handle database error
+       $em = "Database error: " . $e->getMessage();
+       header("Location: index.php?error=$em");
+       exit();
+   }
+}

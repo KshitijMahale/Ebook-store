@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			?>
 			<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
-			<form action="summary.php" method="post">
+			<form action="php/add-payment.php" method="post">
 
 				<script 
 					src="https://checkout.razorpay.com/v1/checkout.js"
@@ -129,10 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 				<input type="hidden" name="orderid" value="<?php echo $orderid;?>">
-				<input type="hidden" name="price" value="<?php echo $abprice;?>">
 				<input type="hidden" name="book_id" value="<?php echo $book_id;?>">
 				<input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-				<input type="hidden" name="book_title" value="<?php echo $book_title;?>">
 
 				<input type="hidden" custom="Hidden Element" name="hidden">
 			</form>

@@ -51,6 +51,10 @@ $categories = get_all_categories($conn);
 		             aria-current="page" 
 		             href="index.php">Store</a>
 		        </li>
+				<li class="nav-item">
+		          <a class="nav-link" 
+		             href="my-books.php">My Books</a>
+		        </li>
 		        <li class="nav-item">
 		          <a class="nav-link" 
 		             href="#">Contact</a>
@@ -106,28 +110,29 @@ $categories = get_all_categories($conn);
 		       </div>
 			<?php }else{ ?>
 			<div class="pdf-list d-flex flex-wrap">
-				<?php foreach ($books as $book) { ?>
+			<?php
+				foreach ($books as $book) {
+					// Check if the book is purchased by the user
+					$isPurchased = has_user_purchased_book($conn, $_SESSION['user_id'], $book['id']);
+				?>
+
 				<div class="card m-1">
-					<img src="uploads/cover/<?=$book['cover']?>"
-					     class="card-img-top">
+					<img src="uploads/cover/<?=$book['cover']?>" class="card-img-top">
 					<div class="card-body">
-						<h5 class="card-title">
-							<?=$book['title']?>
-						</h5>
+						<h5 class="card-title"><?=$book['title']?></h5>
 						<p class="card-text">
 							<i><b>By:
-								<?php foreach($authors as $author){ 
+								<?php foreach ($authors as $author) {
 									if ($author['id'] == $book['author_id']) {
 										echo $author['name'];
 										break;
 									}
 								?>
-
 								<?php } ?>
-							<br></b></i>
+								<br></b></i>
 							<?=$book['description']?>
 							<br><i><b>Category:
-								<?php foreach($categories as $category){ 
+								<?php foreach ($categories as $category) {
 									if ($category['id'] == $book['category_id']) {
 										echo $category['name'];
 										break;
@@ -136,31 +141,27 @@ $categories = get_all_categories($conn);
 								<?php } ?>
 								<br></b></i>
 							<!-- Book price -->
-							<i><b>Price:
-								<?php
-									echo $book['price'];
-								?>₹
-							<br></b></i>
+							<i><b>Price: <?php echo $book['price']; ?>₹<br></b></i>
 						</p>
-                       <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-success">Open</a>
-						  <!-- comment both <a> tags -->
-                        <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-primary"
-                          download="<?=$book['title']?>">Download</a>
 
-						<!-- Buy button form -->
-						<form action="payment.php" method="post">
-							<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
-							<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
-							<input type="hidden" name="book_price" value="<?= $book['price'] ?>">
-							<input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
-							<button type="submit" class="btn btn-secondary">Buy</button>
-						</form>
-
+						<?php if ($isPurchased) { ?>
+							<!-- Display Open and Download buttons -->
+							<a href="uploads/files/<?=$book['file']?>" class="btn btn-success">Open</a>
+							<a href="uploads/files/<?=$book['file']?>" class="btn btn-primary" download="<?=$book['title']?>">Download</a>
+						<?php } else { ?>
+							<!-- Display Buy button -->
+							<form action="payment.php" method="post">
+								<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
+								<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
+								<input type="hidden" name="book_price" value="<?= $book['price'] ?>">
+								<input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
+								<button type="submit" class="btn btn-secondary">Buy</button>
+							</form>
+						<?php } ?>
 					</div>
 				</div>
-				<?php } ?>
+			<?php } ?>
+
 			</div>
 		<?php } ?>
 
