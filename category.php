@@ -74,7 +74,7 @@ $current_category = get_category($conn, $id);
 		             href="admin.php">Admin</a>
 		          <?php }else{ ?>
 		          <a class="nav-link" 
-		             href="login.php">Login</a>
+		             href="logout.php">Logout</a>
 		          <?php } ?>
 
 		        </li>

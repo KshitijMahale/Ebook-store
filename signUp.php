@@ -1,9 +1,9 @@
 <?php  
 session_start();
 
-# If the admin is logged in
-if (!isset($_SESSION['user_id']) &&
-    !isset($_SESSION['user_email'])) {
+// # If the user is logged in
+// if (!isset($_SESSION['user_id']) &&
+//     !isset($_SESSION['user_email'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) &&
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="img//book-open-reader-solid (1).svg" />
-	<title>LOGIN</title>
+	<title>SIGNUP</title>
 
     <!-- bootstrap 5 CDN-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
@@ -26,9 +26,9 @@ if (!isset($_SESSION['user_id']) &&
 		<form class="p-5 rounded shadow"
 		      style="max-width: 30rem; width: 100%"
 		      method="POST"
-		      action="php/auth.php">
+		      action="php/register-user.php">
 
-		  <h1 class="text-center display-4 pb-5">LOGIN</h1>
+		  <h1 class="text-center display-4 pb-5">SIGN UP</h1>
 		  <?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">
 			  <?=htmlspecialchars($_GET['error']); ?>
@@ -36,13 +36,22 @@ if (!isset($_SESSION['user_id']) &&
 		  <?php } ?>
 
 		  <div class="mb-3">
+		    <label for="exampleInputName1" 
+		           class="form-label">Name</label>
+		    <input type="text" 
+		           class="form-control" 
+		           name="name" 
+		           id="exampleInputName1" placeholder="ex. John Doe">
+		  </div>
+
+		  <div class="mb-3">
 		    <label for="exampleInputEmail1" 
-		           class="form-label">Email address</label>
+		           class="form-label">Email</label>
 		    <input type="email" 
 		           class="form-control" 
 		           name="email" 
 		           id="exampleInputEmail1" 
-		           aria-describedby="emailHelp">
+		           aria-describedby="emailHelp" placeholder="ex. xyz12@gmail.com">
 		  </div>
 
 		  <div class="mb-3">
@@ -53,18 +62,22 @@ if (!isset($_SESSION['user_id']) &&
 		           name="password" 
 		           id="exampleInputPassword1">
 		  </div>
-		  <button type="submit" 
-		          class="btn btn-primary">
-		          Login</button>
-			<!-- SignUp link -->
-		   <a href="signUp.php" style="margin-left: 4.5rem;">Don't have account? Register here</a>
+          <button type="submit" 
+                  class="btn btn-primary">
+                  SignUp</button>
+
+          <button type="button" 
+		          class="btn btn-primary" style="margin-left: 2rem;"><a href="login.php" style="color: white; text-decoration: none;">
+		          Login</a></button>
 		   <a href="index.php">Store</a>
 		</form>
 	</div>
 </body>
 </html>
 
-<?php }else{
-  header("Location: admin.php");
-  exit;
-} ?>
+<?php 
+// }else{
+//   header("Location: index.php");
+//   exit;
+// } 
+?>

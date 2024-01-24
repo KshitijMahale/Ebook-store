@@ -76,7 +76,7 @@ $categories = get_all_categories($conn);
 		             href="admin.php">Admin</a>
 		          <?php }else{ ?>
 		          <a class="nav-link" 
-		             href="login.php">Login</a>
+		             href="logout.php">Logout</a>
 		          <?php } ?>
 
 		        </li>

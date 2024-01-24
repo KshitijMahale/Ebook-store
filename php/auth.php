@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (isset($_POST['email']) && isset($_POST['password'])) {
@@ -35,13 +35,47 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         $_SESSION['user_email'] = $email;
         header("Location: ../admin.php");
         exit();
-    }else {
-        # Error message
-        $em = "Incorrect User name or password";
-        header("Location: ../login.php?error=$em");
+    } else {
+        # User login authentication
+        try {
+            $stmt = $conn->prepare("SELECT * FROM user WHERE email = :email");
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            // echo "<pre>";
+            // print_r($user);  // Debugging: Print user data
+    
+            if ($user) {
+                // User found, check password
+                if ($password === $user['password']) { // Modify this line
+                    # Successful user login
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_email'] = $user['email'];
+                    header("Location: ../index.php");
+                    exit();
+                } else {
+                    # Incorrect password
+                    $em = "Incorrect password";
+                    header("Location: ../login.php?error=$em");
+                    exit();
+                }
+            } else {
+                # User not found (incorrect email)
+                $em = "Email not found";
+                header("Location: ../login.php?error=$em");
+                exit();
+            }
+        } catch (PDOException $e) {
+            # Handle database error
+            $em = "Database error: " . $e->getMessage();
+            header("Location: ../login.php?error=$em");
+            exit();
+        }
     }
 } else {
     # Redirect to "../login.php"
     header("Location: ../login.php");
+    exit();
 }
 ?>
