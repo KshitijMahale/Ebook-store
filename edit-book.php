@@ -103,6 +103,16 @@ if (isset($_SESSION['user_id']) &&
 
 		<div class="mb-3">
 		    <label class="form-label">
+		           Book Price
+		           </label>
+		    <input type="text" 
+		           class="form-control" 
+		           value="<?=$book['price']?>"
+		           name="book_price">
+		</div>
+
+		<div class="mb-3">
+		    <label class="form-label">
 		           Book Author
 		           </label>
 		    <select name="book_author"

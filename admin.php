@@ -96,6 +96,7 @@ if (isset($_SESSION['user_id']) &&
 					<th>Title</th>
 					<th>Author</th>
 					<th>Description</th>
+					<th>Price</th>
 					<th>Category</th>
 					<th>Action</th>
 				</tr>
@@ -132,6 +133,7 @@ if (isset($_SESSION['user_id']) &&
 
 				</td>
 				<td><?=$book['description']?></td>
+				<td><?=$book['price']?></td>
 				<td>
 					<?php if ($categories == 0) {
 						echo "Undefined";}else{ 
