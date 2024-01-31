@@ -69,7 +69,9 @@ $categories = get_all_categories($conn);
 		       </div>
 			<?php }else{ ?>
 			<div class="pdf-list d-flex flex-wrap">
-				<?php foreach ($books as $book) { ?>
+				<?php foreach ($books as $book) { 
+					$isPurchased = has_user_purchased_book($conn, $_SESSION['user_id'], $book['id']);
+				?>
 				<div class="card m-1">
 					<img src="uploads/cover/<?=$book['cover']?>"
 					     class="card-img-top">
@@ -100,12 +102,21 @@ $categories = get_all_categories($conn);
 								<?php } ?>
 							<br></b></i>
 						</p>
-                       <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-success">Open</a>
-
-                        <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-primary"
-                          download="<?=$book['title']?>">Download</a>
+                       
+						<?php if ($isPurchased) { ?>
+						<!-- Display Open and Download buttons -->
+						<a href="uploads/files/<?=$book['file']?>" class="btn btn-success">Open</a>
+						<a href="uploads/files/<?=$book['file']?>" class="btn btn-primary" download="<?=$book['title']?>">Download</a>
+						<?php } else { ?>
+							<!-- Display Buy button -->
+							<form action="payment.php" method="post">
+								<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
+								<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
+								<input type="hidden" name="book_price" value="<?= $book['price'] ?>">
+								<input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
+								<button type="submit" class="btn btn-secondary">Buy</button>
+							</form>
+						<?php } ?>
 					</div>
 				</div>
 				<?php } ?>

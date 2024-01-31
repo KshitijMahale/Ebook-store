@@ -50,7 +50,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img//book-open-reader-solid (1).svg" />
+    <link rel="icon" href="../img//book-open-reader-solid (1).svg" />
     <title>Admin - Add User</title>
 
     <!-- bootstrap 5 CDN-->

@@ -2,7 +2,8 @@
 
 # Get all Author function
 function get_all_author($con){
-   $sql  = "SELECT * FROM authors";
+   // $sql  = "SELECT * FROM authors";
+   $sql = "SELECT * FROM authors ORDER BY TRIM(name) ASC"; // Add ORDER BY clause for ascending order
    $stmt = $con->prepare($sql);
    $stmt->execute();
 

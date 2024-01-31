@@ -8,18 +8,14 @@ if (!isset($_GET['key']) || empty($_GET['key'])) {
 }
 $key = $_GET['key'];
 
-# Database Connection File
 include "db_conn.php";
 
-# Book helper function
 include "php/func-book.php";
 $books = search_books($conn, $key);
 
-# author helper function
 include "php/func-author.php";
 $authors = get_all_author($conn);
 
-# Category helper function
 include "php/func-category.php";
 $categories = get_all_categories($conn);
 
@@ -32,10 +28,8 @@ $categories = get_all_categories($conn);
 	<link rel="icon" href="img//book-open-reader-solid (1).svg" />
 	<title>BookHauler</title>
 
-    <!-- bootstrap 5 CDN-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
-    <!-- bootstrap 5 Js bundle CDN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="css/style.css">
@@ -60,7 +54,9 @@ $categories = get_all_categories($conn);
 			  </div>
 			<?php }else{ ?>
 			<div class="pdf-list d-flex flex-wrap">
-				<?php foreach ($books as $book) { ?>
+				<?php foreach ($books as $book) { 
+					$isPurchased = has_user_purchased_book($conn, $_SESSION['user_id'], $book['id']);
+				?>
 				<div class="card m-1">
 					<img src="uploads/cover/<?=$book['cover']?>"
 					     class="card-img-top">
@@ -91,12 +87,20 @@ $categories = get_all_categories($conn);
 								<?php } ?>
 							<br></b></i>
 						</p>
-                       <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-success">Open</a>
-
-                        <a href="uploads/files/<?=$book['file']?>"
-                          class="btn btn-primary"
-                          download="<?=$book['title']?>">Download</a>
+                        <?php if ($isPurchased) { ?>
+							<!-- Display Open and Download buttons -->
+							<a href="uploads/files/<?=$book['file']?>" class="btn btn-success">Open</a>
+							<a href="uploads/files/<?=$book['file']?>" class="btn btn-primary" download="<?=$book['title']?>">Download</a>
+						<?php } else { ?>
+							<!-- Display Buy button -->
+							<form action="payment.php" method="post">
+								<input type="hidden" name="book_id" value="<?= $book['id'] ?>">
+								<input type="hidden" name="book_title" value="<?= $book['title'] ?>">
+								<input type="hidden" name="book_price" value="<?= $book['price'] ?>">
+								<input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
+								<button type="submit" class="btn btn-secondary">Buy</button>
+							</form>
+						<?php } ?>
 					</div>
 				</div>
 				<?php } ?>

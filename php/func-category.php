@@ -2,7 +2,8 @@
 
 # Get all Categories function
 function get_all_categories($con){
-   $sql  = "SELECT * FROM categories";
+   // $sql  = "SELECT * FROM categories";
+   $sql = "SELECT * FROM categories ORDER BY TRIM(name) ASC"; // Add ORDER BY clause for ascending order
    $stmt = $con->prepare($sql);
    $stmt->execute();
 
