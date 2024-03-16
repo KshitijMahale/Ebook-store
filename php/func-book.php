@@ -142,15 +142,17 @@ function has_user_purchased_book($conn, $user_id, $book_id) {
 
 
 function get_book_by_searchKey($con, $name) {  //conn
-   $sql = "SELECT * FROM books WHERE title LIKE :name";
+   $sql = "SELECT * FROM books WHERE title LIKE :name OR description LIKE :name";
+   // $sql = "SELECT * FROM books WHERE title LIKE :name";
+   // $sql = "SELECT * FROM books WHERE title OR description LIKE :name";
    $stmt = $con->prepare($sql);
-   $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR); // Use parameterized query to prevent SQL injection
+   $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
    $stmt->execute();
 
    if ($stmt->rowCount() > 0) {
        $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
    } else {
-       $books = [];
+       $books = 0;
    }
 
    return $books;

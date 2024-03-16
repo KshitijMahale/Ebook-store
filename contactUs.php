@@ -2,9 +2,44 @@
 session_start();
 if (!isset($_SESSION['user_id'])){
 	header("Location: login.php");
+	exit(); // Ensure script stops execution if user is not logged in
 }
+
 # Database Connection File
 include "db_conn.php";
+
+# Fetch user information based on user ID
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT name, email FROM user WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    // Redirect or display an error message if user data is not found
+    header("Location: login.php");
+    exit();
+}
+
+# Initialize message variable
+$message = '';
+
+# Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    # Retrieve form data
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message_content = $_POST['message'];
+    
+    # Insert message into database
+    $sql_insert = "INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)";
+    $stmt_insert = $conn->prepare($sql_insert);
+    if ($stmt_insert->execute([$name, $email, $message_content])) {
+        $message = 'Message sent successfully!';
+    } else {
+        $message = 'Failed to send message. Please try again.';
+    }
+}
 
 # Book helper function
 include "php/func-book.php";
@@ -39,15 +74,22 @@ $categories = get_all_categories($conn);
     <div class="container">
         <?php include "header.html"; ?>
         <h1 class="mt-5" style="text-align: center;">Contact Us</h1>
-        <!-- <p>If you have any questions or inquiries, please fill out the form below:</p> -->
-        <form action="send_contact_email.php" method="post" style="width: 25rem; margin-left: 23rem;">
+        <!-- Display message if set -->
+        <?php if (!empty($message)) : ?>
+        <div class="alert alert-success" role="alert">
+            <?= $message ?>
+        </div>
+        <?php endif; ?>
+        <!-- Contact form -->
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="shadow p-4 rounded mt-5"
+           style="width: 60%; max-width: 30rem; margin-left: 20rem">
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message:</label>
