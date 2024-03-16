@@ -63,27 +63,7 @@ $purchased_books = get_user_purchased_books($conn, $user_id);
                             class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title"><?= $book['title'] ?></h5>
-                            <p class="card-text">
-                                <i><b>By:
-                                    <?php foreach($authors as $author){ 
-                                        if ($author['id'] == $book['author_id']) {
-                                            echo $author['name'];
-                                            break;
-                                        }
-                                    } ?>
-                                <br></b></i>
-                                <?= $book['description'] ?>
-                                <br><i><b>Category:
-                                    <?php foreach($categories as $category){ 
-                                        if ($category['id'] == $book['category_id']) {
-                                            echo $category['name'];
-                                            break;
-                                        }
-                                    } ?>
-                                <br></b></i>
-                                <!-- Book price -->
-                                <i><b>Price: <?= $book['price'] ?>₹<br></b></i>
-                            </p>
+                            
                             <a href="uploads/files/<?= $book['file'] ?>"
                                 class="btn btn-success">Open</a>
                             <a href="uploads/files/<?= $book['file'] ?>"

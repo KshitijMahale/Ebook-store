@@ -60,10 +60,10 @@ if (isset($_SESSION['user_id']) &&
            method="post"
            enctype="multipart/form-data" 
            class="shadow p-4 rounded mt-5"
-           style="width: 90%; max-width: 50rem;">
+           style="width: 90%; max-width: 50rem; margin-left: 10rem; margin-bottom: 2rem;">
 
      	<h1 class="text-center pb-5 display-4 fs-3">
-     		Add New Book
+     		<b>Add New Book</b>
      	</h1>
      	<?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">

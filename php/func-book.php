@@ -2,7 +2,7 @@
 
 # Get All books function
 function get_all_books($con){
-   $sql  = "SELECT * FROM books ORDER bY id DESC";
+   $sql  = "SELECT * FROM books ORDER bY price ASC";
    $stmt = $con->prepare($sql);
    $stmt->execute();
 
@@ -138,4 +138,20 @@ function has_user_purchased_book($conn, $user_id, $book_id) {
        header("Location: index.php?error=$em");
        exit();
    }
+}
+
+
+function get_book_by_searchKey($con, $name) {  //conn
+   $sql = "SELECT * FROM books WHERE title LIKE :name";
+   $stmt = $con->prepare($sql);
+   $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR); // Use parameterized query to prevent SQL injection
+   $stmt->execute();
+
+   if ($stmt->rowCount() > 0) {
+       $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   } else {
+       $books = [];
+   }
+
+   return $books;
 }

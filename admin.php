@@ -41,7 +41,7 @@ if (isset($_SESSION['user_id']) &&
 	<div class="container">
 		<?php include "admin-header.html"; ?>
 
-       <form action="search.php"
+       <form action="search_book.php"
              method="get" 
              style="width: 100%; max-width: 30rem">
 
@@ -88,7 +88,7 @@ if (isset($_SESSION['user_id']) &&
 
 
         <!-- List of all books -->
-		<h4>All Books</h4>
+		<h2 style="margin-left: 30rem;">All Books</h2>
 		<table class="table table-bordered shadow">
 			<thead>
 				<tr>
@@ -152,7 +152,7 @@ if (isset($_SESSION['user_id']) &&
 					   Edit</a>
 
 					<a href="php/delete-book.php?id=<?=$book['id']?>" 
-					   class="btn btn-danger">
+					   class="btn btn-danger" style="margin-top: 0.3rem;">
 				       Delete</a>
 				</td>
 			  </tr>

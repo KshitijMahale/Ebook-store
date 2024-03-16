@@ -28,10 +28,10 @@ if (isset($_SESSION['user_id']) &&
      <form action="php/add-category.php"
            method="post" 
            class="shadow p-4 rounded mt-5"
-           style="width: 90%; max-width: 50rem;">
+           style="width: 90%; max-width: 50rem; margin-left: 10rem"">
 
      	<h1 class="text-center pb-5 display-4 fs-3">
-     		Add New Category
+     		<b>Add New Category</b>
      	</h1>
      	<?php if (isset($_GET['error'])) { ?>
           <div class="alert alert-danger" role="alert">

@@ -34,9 +34,30 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     <div class="container">
         <?php include "admin-header.html"; ?>
 
-        <h1 class="text-center pb-5 display-4 fs-3" style="margin-top: 3rem;">
-            User's details
+        <h1 class="text-center pb-5 display-4 fs-3" style="margin-top: 5rem; margin-bottom: -6rem;">
+            <b>User's details</b>
         </h1>
+
+        <form action="search_user.php"
+                method="get" 
+                style="width: 100%; max-width: 20rem; margin-bottom: -2rem;">
+
+            <div class="input-group my-5">
+            <input type="text" 
+                    class="form-control"
+                    name="key" 
+                    placeholder="Search User..." 
+                    aria-label="Search User..." 
+                    aria-describedby="basic-addon2">
+
+            <button class="input-group-text
+                            btn btn-primary" 
+                    id="basic-addon2">
+                    <img src="img/search.png"
+                        width="18">
+            </button>
+            </div>
+        </form>
 
         <!-- Display user details in a table -->
         <table class="table table-bordered shadow">
