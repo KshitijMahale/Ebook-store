@@ -1,338 +1,207 @@
-<?php  
+<?php
 session_start();
 
-# If the admin is logged in
-if (isset($_SESSION['user_id']) &&
-    isset($_SESSION['user_email'])) {
+if (
+	isset($_SESSION['user_id']) &&
+	isset($_SESSION['user_email'])
+) {
 
-	# Database Connection File
 	include "../db_conn.php";
 
-    # Validation helper function
-    include "func-validation.php";
+	include "func-validation.php";
 
-    # File Upload helper function
-    include "func-file-upload.php";
+	include "func-file-upload.php";
 
+	if (
+		isset($_POST['book_id'])          &&
+		isset($_POST['book_title'])       &&
+		isset($_POST['book_description']) &&
+		isset($_POST['book_price'])       &&
+		isset($_POST['book_author'])      &&
+		isset($_POST['book_category'])    &&
+		isset($_FILES['book_cover'])      &&
+		isset($_FILES['file'])            &&
+		isset($_POST['current_cover'])    &&
+		isset($_POST['current_file'])
+	) {
 
-    /** 
-	  If all Input field
-	  are filled
-	**/
-	if (isset($_POST['book_id'])          &&
-        isset($_POST['book_title'])       &&
-        isset($_POST['book_description']) &&
-        isset($_POST['book_price'])       &&
-        isset($_POST['book_author'])      &&
-        isset($_POST['book_category'])    &&
-        isset($_FILES['book_cover'])      &&
-        isset($_FILES['file'])            &&
-        isset($_POST['current_cover'])    &&
-        isset($_POST['current_file'])) {
-
-		/** 
-		Get data from POST request 
-		and store them in var
-		**/
 		$id          = $_POST['book_id'];
 		$title       = $_POST['book_title'];
 		$description = $_POST['book_description'];
 		$price       = $_POST['book_price'];
 		$author      = $_POST['book_author'];
 		$category    = $_POST['book_category'];
-        
-         /** 
-	      Get current cover & current file 
-	      from POST request and store them in var
-	    **/
 
-        $current_cover = $_POST['current_cover'];
-        $current_file  = $_POST['current_file'];
+		$current_cover = $_POST['current_cover'];
+		$current_file  = $_POST['current_file'];
 
-        #simple form Validation
-        $text = "Book title";
-        $location = "../edit-book.php";
-        $ms = "id=$id&error";
+		$text = "Book title";
+		$location = "../edit-book.php";
+		$ms = "id=$id&error";
 		is_empty($title, $text, $location, $ms, "");
 
 		$text = "Book description";
-        $location = "../edit-book.php";
-        $ms = "id=$id&error";
+		$location = "../edit-book.php";
+		$ms = "id=$id&error";
 		is_empty($description, $text, $location, $ms, "");
 
 		$text = "Book price";
-        $location = "../add-book.php";
-        $ms = "error";
+		$location = "../add-book.php";
+		$ms = "error";
 		is_empty($price, $text, $location, $ms, $user_input);
 
 		$text = "Book author";
-        $location = "../edit-book.php";
-        $ms = "id=$id&error";
+		$location = "../edit-book.php";
+		$ms = "id=$id&error";
 		is_empty($author, $text, $location, $ms, "");
 
 		$text = "Book category";
-        $location = "../edit-book.php";
-        $ms = "id=$id&error";
+		$location = "../edit-book.php";
+		$ms = "id=$id&error";
 		is_empty($category, $text, $location, $ms, "");
 
-        /**
-          if the admin try to 
-          update the book cover
-        **/
-          if (!empty($_FILES['book_cover']['name'])) {
-          	  /**
-		          if the admin try to 
-		          update both 
-		      **/
-		      if (!empty($_FILES['file']['name'])) {
-		      	# update both here
+		if (!empty($_FILES['book_cover']['name'])) {
+			if (!empty($_FILES['file']['name'])) {
 
-		      	# book cover Uploading
-		        $allowed_image_exs = array("jpg", "jpeg", "png");
-		        $path = "cover";
-		        $book_cover = upload_file($_FILES['book_cover'], $allowed_image_exs, $path);
+				# book cover Uploading
+				$allowed_image_exs = array("jpg", "jpeg", "png");
+				$path = "cover";
+				$book_cover = upload_file($_FILES['book_cover'], $allowed_image_exs, $path);
 
-		        # book cover Uploading
-		        $allowed_file_exs = array("pdf", "docx", "pptx");
-		        $path = "files";
-		        $file = upload_file($_FILES['file'], $allowed_file_exs, $path);
-                
-                /**
-				    If error occurred while 
-				    uploading
-				**/
-		        if ($book_cover['status'] == "error" || 
-		            $file['status'] == "error") {
+				# book file Uploading
+				$allowed_file_exs = array("pdf", "docx", "pptx");
+				$path = "files";
+				$file = upload_file($_FILES['file'], $allowed_file_exs, $path);
 
-			    	$em = $book_cover['data'];
+				if (
+					$book_cover['status'] == "error" ||
+					$file['status'] == "error"
+				) {
 
-			    	/**
-			    	  Redirect to '../edit-book.php' 
-			    	  and passing error message & the id
-			    	**/
-			    	header("Location: ../edit-book.php?error=$em&id=$id");
-			    	exit;
-			    }else {
-                  # current book cover path
-			      $c_p_book_cover = "../uploads/cover/$current_cover";
+					$em = $book_cover['data'];
 
-			      # current file path
-			      $c_p_file = "../uploads/files/$current_file";
+					header("Location: ../edit-book.php?error=$em&id=$id");
+					exit;
+				} else {
+					# current book cover path
+					$c_p_book_cover = "../uploads/cover/$current_cover";
 
-			      # Delete from the server
-			      unlink($c_p_book_cover);
-			      unlink($c_p_file);
+					# current file path
+					$c_p_file = "../uploads/files/$current_file";
 
-			      /**
-		              Getting the new file name 
-		              and the new book cover name 
-		          **/
-		           $file_URL = $file['data'];
-		           $book_cover_URL = $book_cover['data'];
+					unlink($c_p_book_cover);
+					unlink($c_p_file);
 
-		            # update just the data
-		          	$sql = "UPDATE books
-		          	        SET title=?,
-		          	            author_id=?,
-		          	            description=?,
-		          	            category_id=?,
-		          	            cover=?,
-		          	            file=?,
-								price=?
-		          	        WHERE id=?";
-		          	$stmt = $conn->prepare($sql);
-					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $file_URL, $price, $id]);
+					$file_URL = $file['data'];
+					$book_cover_URL = $book_cover['data'];
 
-				    /**
-				      If there is no error while 
-				      updating the data
-				    **/
-				     if ($res) {
-				     	# success message
-				     	$sm = "Successfully updated!";
+					# update just the data
+					$sql = "UPDATE books SET title=?, author_id=?, description=?, category_id=?, cover=?, file=?, price=? WHERE id=?";
+					$stmt = $conn->prepare($sql);
+					$res  = $stmt->execute([$title, $author, $description, $category, $book_cover_URL, $file_URL, $price, $id]);
+
+					if ($res) {
+						$sm = "Successfully updated!";
 						header("Location: ../edit-book.php?success=$sm&id=$id");
-			            exit;
-				     }else{
-				     	# Error message
-				     	$em = "Unknown Error Occurred!";
+						exit;
+					} else {
+						$em = "Unknown Error Occurred!";
 						header("Location: ../edit-book.php?error=$em&id=$id");
-			            exit;
-				     }
+						exit;
+					}
+				}
+			} else {
 
+				# book cover Uploading
+				$allowed_image_exs = array("jpg", "jpeg", "png");
+				$path = "cover";
+				$book_cover = upload_file($_FILES['book_cover'], $allowed_image_exs, $path);
 
-			    }
-		      }else {
-		      	# update just the book cover
+				if ($book_cover['status'] == "error") {
 
-		      	# book cover Uploading
-		        $allowed_image_exs = array("jpg", "jpeg", "png");
-		        $path = "cover";
-		        $book_cover = upload_file($_FILES['book_cover'], $allowed_image_exs, $path);
-                
-                /**
-				    If error occurred while 
-				    uploading
-				**/
-		        if ($book_cover['status'] == "error") {
+					$em = $book_cover['data'];
 
-			    	$em = $book_cover['data'];
+					header("Location: ../edit-book.php?error=$em&id=$id");
+					exit;
+				} else {
+					$c_p_book_cover = "../uploads/cover/$current_cover";
 
-			    	/**
-			    	  Redirect to '../edit-book.php' 
-			    	  and passing error message & the id
-			    	**/
-			    	header("Location: ../edit-book.php?error=$em&id=$id");
-			    	exit;
-			    }else {
-                  # current book cover path
-			      $c_p_book_cover = "../uploads/cover/$current_cover";
+					unlink($c_p_book_cover);
 
-			      # Delete from the server
-			      unlink($c_p_book_cover);
+					$book_cover_URL = $book_cover['data'];
 
-			      /**
-		              Getting the new file name 
-		              and the new book cover name 
-		          **/
-		           $book_cover_URL = $book_cover['data'];
+					$sql = "UPDATE books SET title=?, author_id=?, description=?, category_id=?, cover=?, price=? WHERE id=?";
+					$stmt = $conn->prepare($sql);
+					$res  = $stmt->execute([$title, $author, $description, $category, $book_cover_URL, $price, $id]);
 
-		            # update just the data
-		          	$sql = "UPDATE books
-		          	        SET title=?,
-		          	            author_id=?,
-		          	            description=?,
-		          	            category_id=?,
-		          	            cover=?,
-								price=?
-		          	        WHERE id=?";
-		          	$stmt = $conn->prepare($sql);
-					$res  = $stmt->execute([$title, $author, $description, $category,$book_cover_URL, $price, $id]);
-
-				    /**
-				      If there is no error while 
-				      updating the data
-				    **/
-				     if ($res) {
-				     	# success message
-				     	$sm = "Successfully updated!";
+					if ($res) {
+						$sm = "Successfully updated!";
 						header("Location: ../edit-book.php?success=$sm&id=$id");
-			            exit;
-				     }else{
-				     	# Error message
-				     	$em = "Unknown Error Occurred!";
+						exit;
+					} else {
+						$em = "Unknown Error Occurred!";
 						header("Location: ../edit-book.php?error=$em&id=$id");
-			            exit;
-				     }
+						exit;
+					}
+				}
+			}
+		}
+		else if (!empty($_FILES['file']['name'])) {
 
+			# book cover Uploading
+			$allowed_file_exs = array("pdf", "docx", "pptx");
+			$path = "files";
+			$file = upload_file($_FILES['file'], $allowed_file_exs, $path);
 
-			    }
-		      }
-          }
-          /**
-          if the admin try to 
-          update just the file
+			if ($file['status'] == "error") {
 
-          **/
-          else if(!empty($_FILES['file']['name'])){
-          	# update just the file
-            
-            # book cover Uploading
-	        $allowed_file_exs = array("pdf", "docx", "pptx");
-	        $path = "files";
-	        $file = upload_file($_FILES['file'], $allowed_file_exs, $path);
-            
-            /**
-			    If error occurred while 
-			    uploading
-			**/
-	        if ($file['status'] == "error") {
+				$em = $file['data'];
 
-		    	$em = $file['data'];
+				header("Location: ../edit-book.php?error=$em&id=$id");
+				exit;
+			} else {
+				# current book cover path
+				$c_p_file = "../uploads/files/$current_file";
 
-		    	/**
-		    	  Redirect to '../edit-book.php' 
-		    	  and passing error message & the id
-		    	**/
-		    	header("Location: ../edit-book.php?error=$em&id=$id");
-		    	exit;
-		    }else {
-              # current book cover path
-		      $c_p_file = "../uploads/files/$current_file";
+				unlink($c_p_file);
 
-		      # Delete from the server
-		      unlink($c_p_file);
+				$file_URL = $file['data'];
 
-		      /**
-	              Getting the new file name 
-	              and the new file name 
-	          **/
-	           $file_URL = $file['data'];
-
-	            # update just the data
-	          	$sql = "UPDATE books
-	          	        SET title=?,
-	          	            author_id=?,
-	          	            description=?,
-	          	            category_id=?,
-	          	            file=?,
-							price=?
-	          	        WHERE id=?";
-	          	$stmt = $conn->prepare($sql);
+				$sql = "UPDATE books SET title=?, author_id=?, description=?, category_id=?, file=?, price=? WHERE id=?";
+				$stmt = $conn->prepare($sql);
 				$res  = $stmt->execute([$title, $author, $description, $category, $file_URL, $price, $id]);
 
-			    /**
-			      If there is no error while 
-			      updating the data
-			    **/
-			     if ($res) {
-			     	# success message
-			     	$sm = "Successfully updated!";
+				if ($res) {
+					$sm = "Successfully updated!";
 					header("Location: ../edit-book.php?success=$sm&id=$id");
-		            exit;
-			     }else{
-			     	# Error message
-			     	$em = "Unknown Error Occurred!";
+					exit;
+				} else {
+					$em = "Unknown Error Occurred!";
 					header("Location: ../edit-book.php?error=$em&id=$id");
-		            exit;
-			     }
-
-
-		    }
-	      
-          }else {
-          	# update just the data
-          	$sql = "UPDATE books
-          	        SET title=?,
-          	            author_id=?,
-          	            description=?,
-          	            category_id=?,
-						price=?
-          	        WHERE id=?";
-          	$stmt = $conn->prepare($sql);
+					exit;
+				}
+			}
+		} else {
+			# update just the data
+			$sql = "UPDATE books SET title=?, author_id=?, description=?, category_id=?, price=? WHERE id=?";
+			$stmt = $conn->prepare($sql);
 			$res  = $stmt->execute([$title, $author, $description, $category, $price, $id]);
 
-		    /**
-		      If there is no error while 
-		      updating the data
-		    **/
-		     if ($res) {
-		     	# success message
-		     	$sm = "Successfully updated!";
+			if ($res) {
+				$sm = "Successfully updated!";
 				header("Location: ../edit-book.php?success=$sm&id=$id");
-	            exit;
-		     }else{
-		     	# Error message
-		     	$em = "Unknown Error Occurred!";
+				exit;
+			} else {
+				$em = "Unknown Error Occurred!";
 				header("Location: ../edit-book.php?error=$em&id=$id");
-	            exit;
-		     }
-          } 
-	}else {
-      header("Location: ../admin.php");
-      exit;
+				exit;
+			}
+		}
+	} else {
+		header("Location: ../admin.php");
+		exit;
 	}
-
-}else{
-  header("Location: ../login.php");
-  exit;
+} else {
+	header("Location: ../login.php");
+	exit;
 }

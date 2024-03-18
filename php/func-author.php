@@ -1,15 +1,15 @@
-<?php 
+<?php
 
 # Get all Author function
-function get_all_author($con){
-   // $sql  = "SELECT * FROM authors";
-   $sql = "SELECT * FROM authors ORDER BY TRIM(name) ASC"; // Add ORDER BY clause for ascending order
+function get_all_author($con)
+{
+   $sql = "SELECT * FROM authors ORDER BY TRIM(name) ASC";
    $stmt = $con->prepare($sql);
    $stmt->execute();
 
    if ($stmt->rowCount() > 0) {
-   	  $authors = $stmt->fetchAll();
-   }else {
+      $authors = $stmt->fetchAll();
+   } else {
       $authors = 0;
    }
 
@@ -18,14 +18,15 @@ function get_all_author($con){
 
 
 # Get  Author by ID function
-function get_author($con, $id){
+function get_author($con, $id)
+{
    $sql  = "SELECT * FROM authors WHERE id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
 
    if ($stmt->rowCount() > 0) {
-   	  $author = $stmt->fetch();
-   }else {
+      $author = $stmt->fetch();
+   } else {
       $author = 0;
    }
 

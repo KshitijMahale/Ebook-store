@@ -1,16 +1,13 @@
 <?php 
 
-# File upload helper function 
 function upload_file($files, $allowed_exs, $path){
    # get data and store them in var
    $file_name = $files['name'];
    $tmp_name  = $files['tmp_name'];
    $error     = $files['error'];
 
-   # if there is no error occurred while uploading
    if ($error === 0) {
    	  
-   	  # get file extension store it in var
    	  $file_ex = pathinfo($file_name, PATHINFO_EXTENSION);
 
    	  /** 
@@ -45,7 +42,6 @@ function upload_file($files, $allowed_exs, $path){
             $sm['status'] = 'success';
 	        $sm['data']   = $new_file_name;
 
-	        #  Return the sm array
 	        return $sm;
             
 		}else{
@@ -56,7 +52,6 @@ function upload_file($files, $allowed_exs, $path){
 	      $em['status'] = 'error';
 	      $em['data']   = "You can't upload files of this type";
 
-	      #  Return the em array
 	      return $em;
 		}
    }else {
@@ -67,7 +62,6 @@ function upload_file($files, $allowed_exs, $path){
       $em['status'] = 'error';
       $em['data']   = 'Error occurred while uploading!';
 
-      #  Return the em array
       return $em;
    }
 }

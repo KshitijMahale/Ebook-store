@@ -1,15 +1,14 @@
-<?php  
+<?php
 
-# Get all Categories function
-function get_all_categories($con){
-   // $sql  = "SELECT * FROM categories";
-   $sql = "SELECT * FROM categories ORDER BY TRIM(name) ASC"; // Add ORDER BY clause for ascending order
+function get_all_categories($con)
+{
+   $sql = "SELECT * FROM categories ORDER BY TRIM(name) ASC";
    $stmt = $con->prepare($sql);
    $stmt->execute();
 
    if ($stmt->rowCount() > 0) {
-   	  $categories = $stmt->fetchAll();
-   }else {
+      $categories = $stmt->fetchAll();
+   } else {
       $categories = 0;
    }
 
@@ -18,14 +17,15 @@ function get_all_categories($con){
 
 
 # Get category by ID
-function get_category($con, $id){
+function get_category($con, $id)
+{
    $sql  = "SELECT * FROM categories WHERE id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
 
    if ($stmt->rowCount() > 0) {
-   	  $category = $stmt->fetch();
-   }else {
+      $category = $stmt->fetch();
+   } else {
       $category = 0;
    }
 

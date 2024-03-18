@@ -2,22 +2,14 @@
 session_start();
 
 if (isset($_POST['email']) && isset($_POST['password'])) {
-    
-    # Database Connection File
+
     include "../db_conn.php";
-    
-    # Validation helper function
+
     include "func-validation.php";
-    
-    /** 
-       Get data from POST request 
-       and store them in var
-    **/
 
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    # simple form validation
 
     $text = "Email";
     $location = "../login.php";
@@ -36,45 +28,35 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         header("Location: ../admin.php");
         exit();
     } else {
-        # User login authentication
         try {
             $stmt = $conn->prepare("SELECT * FROM user WHERE email = :email");
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            // echo "<pre>";
-            // print_r($user);  // Debugging: Print user data
-    
+
             if ($user) {
-                // User found, check password
-                if ($password === $user['password']) { // Modify this line
-                    # Successful user login
+                if ($password === $user['password']) {
                     $_SESSION['user_id'] = $user['user_id'];
                     $_SESSION['user_email'] = $user['email'];
                     header("Location: ../index.php");
                     exit();
                 } else {
-                    # Incorrect password
                     $em = "Incorrect password";
                     header("Location: ../login.php?error=$em");
                     exit();
                 }
             } else {
-                # User not found (incorrect email)
                 $em = "Email not found";
                 header("Location: ../login.php?error=$em");
                 exit();
             }
         } catch (PDOException $e) {
-            # Handle database error
             $em = "Database error: " . $e->getMessage();
             header("Location: ../login.php?error=$em");
             exit();
         }
     }
 } else {
-    # Redirect to "../login.php"
     header("Location: ../login.php");
     exit();
 }

@@ -1,7 +1,8 @@
 <?php
 
 # Get All books function
-function get_all_books($con){
+function get_all_books($con)
+{
    $sql  = "SELECT * FROM books ORDER bY price ASC";
    $stmt = $con->prepare($sql);
    $stmt->execute();
@@ -18,7 +19,8 @@ function get_all_books($con){
 
 
 # Get  book by ID function
-function get_book($con, $id){
+function get_book($con, $id)
+{
    $sql  = "SELECT * FROM books WHERE id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
@@ -34,7 +36,8 @@ function get_book($con, $id){
 
 
 # Search books function
-function search_books($con, $key){
+function search_books($con, $key)
+{
    $sql = "SELECT * FROM books WHERE title LIKE :key OR description LIKE :key OR price LIKE :key;";
    $stmt = $con->prepare($sql);
    $stmt->bindValue(':key', '%' . $key . '%', PDO::PARAM_STR);
@@ -50,7 +53,8 @@ function search_books($con, $key){
 }
 
 # get books by category
-function get_books_by_category($con, $id){
+function get_books_by_category($con, $id)
+{
    $sql  = "SELECT * FROM books WHERE category_id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
@@ -66,7 +70,8 @@ function get_books_by_category($con, $id){
 
 
 # get books by author
-function get_books_by_author($con, $id){
+function get_books_by_author($con, $id)
+{
    $sql  = "SELECT * FROM books WHERE author_id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
@@ -81,7 +86,8 @@ function get_books_by_author($con, $id){
 }
 
 # Get book details by ID function
-function get_book_details_by_id($con, $id){
+function get_book_details_by_id($con, $id)
+{
    $sql  = "SELECT id, title, author_id, category_id FROM books WHERE id=?";
    $stmt = $con->prepare($sql);
    $stmt->execute([$id]);
@@ -96,7 +102,8 @@ function get_book_details_by_id($con, $id){
 }
 
 # Get book details if purchased (use to display purchased books on my books page)
-function get_user_purchased_books($conn, $user_id){
+function get_user_purchased_books($conn, $user_id)
+{
    try {
       $stmt = $conn->prepare("SELECT books.* FROM orders JOIN books ON orders.book_id = books.id WHERE orders.user_id = :user_id AND orders.payment_status = 'Paid'");
       $stmt->bindParam(':user_id', $user_id);
@@ -111,7 +118,8 @@ function get_user_purchased_books($conn, $user_id){
 }
 
 # Get book details if purchased  (use to display buy & open, download buttons)
-function has_user_purchased_book($conn, $user_id, $book_id){
+function has_user_purchased_book($conn, $user_id, $book_id)
+{
    try {
       $stmt = $conn->prepare("SELECT 1 FROM orders WHERE user_id = :user_id AND book_id = :book_id AND payment_status = 'Paid'");
       $stmt->bindParam(':user_id', $user_id);
@@ -128,10 +136,9 @@ function has_user_purchased_book($conn, $user_id, $book_id){
 }
 
 
-function get_book_by_searchKey($con, $name){  //conn
+function get_book_by_searchKey($con, $name)
+{  //conn
    $sql = "SELECT * FROM books WHERE title LIKE :name OR description LIKE :name OR price LIKE :name;";
-   // $sql = "SELECT * FROM books WHERE title LIKE :name";
-   // $sql = "SELECT * FROM books WHERE title OR description LIKE :name";
    $stmt = $con->prepare($sql);
    $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
    $stmt->execute();
